@@ -1,49 +1,64 @@
-/* 1. Neutralizar efectos de composición pesados en toda la página */
+/* 1. BLOQUEO TOTAL DE ANIMACIONES Y TRANSICIONES */
 *, *::before, *::after {
-  animation-duration: 0.001s !important;
-  transition-duration: 0.001s !important;
+  animation: none !important;
+  transition: none !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   box-shadow: none !important;
   text-shadow: none !important;
+
+  /* NUEVA OPTIMIZACIÓN: Desactiva el scroll suave.
+     El scroll instantáneo no requiere cálculos de interpolación en la GPU. */
+  scroll-behavior: auto !important;
 }
 
-/* 2. Opacar contenedores translúcidos (evita capas de renderizado en GPU) */
-chat-window,
-.input-area-container,
-mat-sidenav,
-header,
-aside {
+/* 2. FONDOS NEGROS SÓLIDOS (Sin transparencias) */
+chat-window, .input-area-container, mat-sidenav, header, aside, body, main {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
-  background-color: #1e1f20 !important; /* Mantiene fondo oscuro sólido */
+  background-color: black !important;
 }
 
-/* 3. Desactivar el destello y ondas de carga generativa */
-.sparkle-animation,
-.loading-indicator,
-.gmat-ripple {
-  animation: none !important;
-}
-/* 4. Renderizado diferido (Crucial para chats largos)
-Le dice al navegador que no calcule ni dibuje los mensajes que no están en pantalla.
-Ahorra muchísima RAM cuando haces scroll hacia arriba. */
-.conversation-container > div,
-chat-window div {
+/* Renderizado diferido para chats largos (ahorra RAM) */
+.conversation-container > div, chat-window div {
   content-visibility: auto !important;
 }
 
-/* 5. Bloquear fuentes web personalizadas
-Forzar la fuente del sistema (Lubuntu) evita que el navegador gaste red y RAM
-procesando y suavizando la fuente "Google Sans". */
-* {
+/* 3. FUENTES DEL SISTEMA (Más ligeras de procesar) */
+message-content, .message-content, p, span {
   font-family: system-ui, -apple-system, sans-serif !important;
   letter-spacing: normal !important;
 }
 
-/* 6. Geometría plana (Opcional pero efectivo)
-Dibujar curvas consume ciclos adicionales en la GPU integrada.
-Esto vuelve cuadrada toda la interfaz, eliminando ese cálculo. */
+/* 4. REPARACIÓN DE ICONOS (Para que no se vean como texto roto) */
+.material-symbols-outlined, [class*="icon"], [class*="symbol"], mat-icon {
+  font-family: 'Google Symbols', 'Material Symbols Outlined', 'Material Icons' !important;
+  font-style: normal !important;
+  text-transform: none !important;
+  color: white !important; /* Asegura que el icono sea visible sobre fondo negro */
+}
+
+/* 5. GEOMETRÍA PLANA Y OPTIMIZACIÓN VECTORIAL */
 * {
   border-radius: 0 !important;
+}
+
+/* NUEVA OPTIMIZACIÓN: Evita que el navegador calcule interacciones
+   (como cambios de color al pasar el ratón) en gráficos vectoriales complejos. */
+svg {
+  pointer-events: none !important;
+}
+
+/* 6. REPARACIÓN DE IMÁGENES ROTAS (Cuadro negro puro) */
+img {
+  color: transparent !important;
+}
+
+img.opt-img-broken {
+  content: none !important;
+  background-color: #000000 !important;
+  border: 1px solid #333 !important;
+  min-width: 35px !important;
+  min-height: 35px !important;
+  display: inline-block !important;
 }
