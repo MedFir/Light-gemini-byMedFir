@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Light Gemini extension by MedFir",
+  "version": "1.0",
+  "description": "Desactiva desenfoques, sombras y animaciones pesadas en Gemini para hardware modesto.",
+  "content_scripts": [
+    {
+      "matches": ["https://gemini.google.com/*"],
+      "css": ["styles.css"],
+      "js": ["script.js"],
+      "run_at": "document_start"
+    }
+  ]
+}

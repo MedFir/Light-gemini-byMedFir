@@ -1,0 +1,49 @@
+/* 1. Neutralizar efectos de composición pesados en toda la página */
+*, *::before, *::after {
+  animation-duration: 0.001s !important;
+  transition-duration: 0.001s !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+/* 2. Opacar contenedores translúcidos (evita capas de renderizado en GPU) */
+chat-window,
+.input-area-container,
+mat-sidenav,
+header,
+aside {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background-color: #1e1f20 !important; /* Mantiene fondo oscuro sólido */
+}
+
+/* 3. Desactivar el destello y ondas de carga generativa */
+.sparkle-animation,
+.loading-indicator,
+.gmat-ripple {
+  animation: none !important;
+}
+/* 4. Renderizado diferido (Crucial para chats largos)
+Le dice al navegador que no calcule ni dibuje los mensajes que no están en pantalla.
+Ahorra muchísima RAM cuando haces scroll hacia arriba. */
+.conversation-container > div,
+chat-window div {
+  content-visibility: auto !important;
+}
+
+/* 5. Bloquear fuentes web personalizadas
+Forzar la fuente del sistema (Lubuntu) evita que el navegador gaste red y RAM
+procesando y suavizando la fuente "Google Sans". */
+* {
+  font-family: system-ui, -apple-system, sans-serif !important;
+  letter-spacing: normal !important;
+}
+
+/* 6. Geometría plana (Opcional pero efectivo)
+Dibujar curvas consume ciclos adicionales en la GPU integrada.
+Esto vuelve cuadrada toda la interfaz, eliminando ese cálculo. */
+* {
+  border-radius: 0 !important;
+}
