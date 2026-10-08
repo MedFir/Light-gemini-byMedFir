@@ -1,4 +1,4 @@
-/* 1. BLOQUEO TOTAL DE ANIMACIONES Y TRANSICIONES */
+/* 1. BLOQUEO TOTAL DE ANIMACIONES, TRANSICIONES Y SCROLL SUAVE */
 *, *::before, *::after {
   animation: none !important;
   transition: none !important;
@@ -6,54 +6,51 @@
   -webkit-backdrop-filter: none !important;
   box-shadow: none !important;
   text-shadow: none !important;
-
-  /* NUEVA OPTIMIZACIÓN: Desactiva el scroll suave.
-     El scroll instantáneo no requiere cálculos de interpolación en la GPU. */
   scroll-behavior: auto !important;
 }
 
-/* 2. FONDOS NEGROS SÓLIDOS (Sin transparencias) */
+/* 2. FONDOS NEGROS SÓLIDOS Y GEOMETRÍA PLANA */
 chat-window, .input-area-container, mat-sidenav, header, aside, body, main {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   background-color: black !important;
 }
+* { border-radius: 0 !important; }
 
-/* Renderizado diferido para chats largos (ahorra RAM) */
+/* 3. EXTERMINIO DE ELEMENTOS INÚTILES (NUEVO: Ahorro masivo de RAM) */
+/* Oculta textos legales, marcas de agua, y contenedores de feedback */
+.disclaimer-container,
+.gmat-caption,
+.bottom-container p,
+[aria-label="Feedback"],
+[mattooltip] { /* Desactiva tooltips emergentes que ocupan memoria */
+  display: none !important;
+}
+
+/* Renderizado diferido para chats largos */
 .conversation-container > div, chat-window div {
   content-visibility: auto !important;
 }
 
-/* 3. FUENTES DEL SISTEMA (Más ligeras de procesar) */
+/* 4. FUENTES DEL SISTEMA */
 message-content, .message-content, p, span {
   font-family: system-ui, -apple-system, sans-serif !important;
   letter-spacing: normal !important;
 }
 
-/* 4. REPARACIÓN DE ICONOS (Para que no se vean como texto roto) */
+/* 5. REPARACIÓN DE ICONOS */
 .material-symbols-outlined, [class*="icon"], [class*="symbol"], mat-icon {
   font-family: 'Google Symbols', 'Material Symbols Outlined', 'Material Icons' !important;
   font-style: normal !important;
   text-transform: none !important;
-  color: white !important; /* Asegura que el icono sea visible sobre fondo negro */
+  color: white !important;
 }
 
-/* 5. GEOMETRÍA PLANA Y OPTIMIZACIÓN VECTORIAL */
-* {
-  border-radius: 0 !important;
-}
+/* 6. OPTIMIZACIÓN VECTORIAL */
+svg { pointer-events: none !important; }
 
-/* NUEVA OPTIMIZACIÓN: Evita que el navegador calcule interacciones
-   (como cambios de color al pasar el ratón) en gráficos vectoriales complejos. */
-svg {
-  pointer-events: none !important;
-}
-
-/* 6. REPARACIÓN DE IMÁGENES ROTAS (Cuadro negro puro) */
-img {
-  color: transparent !important;
-}
-
+/* 7. REPARACIÓN DE IMÁGENES ROTAS */
+img { color: transparent !important; }
 img.opt-img-broken {
   content: none !important;
   background-color: #000000 !important;
@@ -61,4 +58,102 @@ img.opt-img-broken {
   min-width: 35px !important;
   min-height: 35px !important;
   display: inline-block !important;
+}
+/* =========================================================
+   8. EXTERMINIO DE INTERFAZ (Ahorro de RAM y Gráfica)
+   ========================================================= */
+
+/* 1. Texto de "Gemini puede cometer errores" */
+.disclaimer-container,
+.bottom-container p,
+[class*="disclaimer"] {
+  display: none !important;
+}
+
+/* 2. Botón de micrófono (evita que cargue librerías de audio en fondo) */
+button[aria-label*="micrófono" i],
+button[aria-label*="microphone" i],
+button[mattooltip*="Voz" i] {
+  display: none !important;
+}
+
+/* 3. Menús y botones laterales (Videos, Biblioteca, Imágenes, Estudiantes) */
+[aria-label*="Videos" i],
+[aria-label*="Biblioteca" i],
+[aria-label*="Imágenes" i],
+[aria-label*="Estudiantes" i] {
+  display: none !important;
+}
+
+/* 4. Selector superior entre Chat y Spark (beta) */
+[aria-label*="Spark" i],
+mat-button-toggle-group,
+.mode-switcher-container {
+  display: none !important;
+}
+
+/* 5. Foto de perfil (Oculta el botón superior y tu avatar en los mensajes)
+   Al ocultar 'googleusercontent', el navegador ni siquiera descarga tu foto,
+   ahorrando red y RAM. */
+a[aria-label*="Cuenta de Google" i],
+a[aria-label*="Google Account" i],
+img[src*="googleusercontent.com"] {
+  display: none !important;
+}
+/* =========================================================
+   9. DESTRUCCIÓN DEL DEGRADADO Y CAJAS GRISES (CORREGIDO)
+   ========================================================= */
+
+/* 1. Elimina el degradado translúcido sin ocultar el contenedor entero */
+[class*="gradient" i],
+.gradient-container,
+chat-window > div > div:last-child::before,
+.bottom-container::before {
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  /* Se eliminó el display: none para que no borre la caja de texto en chats largos */
+}
+
+/* Anula estilos en línea de degradados directamente */
+[style*="linear-gradient"] {
+  background-image: none !important;
+}
+
+/* 2. Vuelve la caja exterior transparente */
+.bottom-container,
+.input-area-container,
+.input-area-wrapper,
+[data-test-id="bottom-bar"] {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* 3. Vuelve la caja interior (donde escribes) negra pura y plana */
+.rich-textarea,
+.input-area,
+[data-test-id="chat-input"] {
+  background-color: black !important;
+  border: 1px solid #333 !important;
+}
+/* =========================================================
+   10. FUERZA BRUTA: CHAT/SPARK Y MICRÓFONO
+   ========================================================= */
+
+/* El selector Chat/Spark usa un sistema de pestañas de Angular Material.
+   Esto fulmina toda la barra de pestañas superior. */
+gmat-tab-header,
+.mat-mdc-tab-header,
+[role="tablist"],
+[data-test-id="mode-switcher"] {
+  display: none !important;
+}
+
+/* El botón de micrófono usa un ID de prueba interno, lo bloqueamos por ahí. */
+[data-test-id="voice-button"],
+[data-test-id*="voice" i],
+[data-test-id*="mic" i],
+button:has(mat-icon[data-mat-icon-name="mic"]),
+button:has(mat-icon[data-mat-icon-name="mic_none"]) {
+  display: none !important;
 }
