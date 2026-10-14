@@ -137,19 +137,22 @@ chat-window > div > div:last-child::before,
   border: 1px solid #333 !important;
 }
 /* =========================================================
-   10. FUERZA BRUTA: CHAT/SPARK Y MICRÓFONO
+   10. FUERZA BRUTA: CHAT/SPARK Y MICRÓFONO (CORREGIDO)
    ========================================================= */
 
-/* El selector Chat/Spark usa un sistema de pestañas de Angular Material.
-   Esto fulmina toda la barra de pestañas superior. */
-gmat-tab-header,
-.mat-mdc-tab-header,
-[role="tablist"],
-[data-test-id="mode-switcher"] {
+/* Limitamos la destrucción de pestañas SOLO a la cabecera superior */
+header mode-switcher,
+header gmat-tab-group,
+header mat-tab-header,
+header gmat-tab-header,
+header .mat-mdc-tab-header,
+header [role="tablist"],
+[data-test-id="mode-switcher"],
+.mode-switcher-container {
   display: none !important;
 }
 
-/* El botón de micrófono usa un ID de prueba interno, lo bloqueamos por ahí. */
+/* Destrucción del botón de micrófono */
 [data-test-id="voice-button"],
 [data-test-id*="voice" i],
 [data-test-id*="mic" i],
