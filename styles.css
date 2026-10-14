@@ -22,32 +22,23 @@ chat-window, .input-area-container, mat-sidenav, header, aside, body, main {
 .disclaimer-container,
 .gmat-caption,
 .bottom-container p,
-[aria-label="Feedback"],
-[mattooltip] { /* Desactiva tooltips emergentes que ocupan memoria */
+[aria-label="Feedback"] {
   display: none !important;
 }
 
-/* Renderizado diferido para chats largos */
-.conversation-container > div, chat-window div {
-  content-visibility: auto !important;
-}
-
 /* 4. FUENTES DEL SISTEMA */
-message-content, .message-content, p, span {
+message-content, .message-content, p,
+span:not([class*="icon"]):not([class*="symbol"]) {
   font-family: system-ui, -apple-system, sans-serif !important;
   letter-spacing: normal !important;
 }
 
 /* 5. REPARACIÓN DE ICONOS */
-.material-symbols-outlined, [class*="icon"], [class*="symbol"], mat-icon {
-  font-family: 'Google Symbols', 'Material Symbols Outlined', 'Material Icons' !important;
+.material-symbols-outlined, .material-icons, .material-icons-outlined, mat-icon {
   font-style: normal !important;
   text-transform: none !important;
   color: white !important;
 }
-
-/* 6. OPTIMIZACIÓN VECTORIAL */
-svg { pointer-events: none !important; }
 
 /* 7. REPARACIÓN DE IMÁGENES ROTAS */
 img { color: transparent !important; }
@@ -158,5 +149,71 @@ header [role="tablist"],
 [data-test-id*="mic" i],
 button:has(mat-icon[data-mat-icon-name="mic"]),
 button:has(mat-icon[data-mat-icon-name="mic_none"]) {
+  display: none !important;
+}
+
+
+/* Hide only the leading icons for these navigation entries. */
+:is(nav, [role="navigation"], mat-sidenav, bard-sidenav)
+  :is(
+    [aria-label*="Programado" i],
+    [aria-label*="Scheduled" i],
+    [aria-label*="Personalizar" i],
+    [aria-label*="Customize" i],
+    [mattooltip*="Programado" i],
+    [mattooltip*="Scheduled" i],
+    [mattooltip*="Personalizar" i],
+    [mattooltip*="Customize" i]
+  )
+  :is(svg, mat-icon, .material-symbols-outlined, .material-icons, .material-icons-outlined),
+:is(nav, [role="navigation"], mat-sidenav, bard-sidenav)
+  :is(
+    svg[aria-label*="Programado" i],
+    svg[aria-label*="Scheduled" i],
+    svg[aria-label*="Personalizar" i],
+    svg[aria-label*="Customize" i],
+    mat-icon[aria-label*="Programado" i],
+    mat-icon[aria-label*="Scheduled" i],
+    mat-icon[aria-label*="Personalizar" i],
+    mat-icon[aria-label*="Customize" i]
+  ) {
+  display: none !important;
+}
+
+/* Hide the complete navigation entries, not just their icons. */
+:is(nav, [role="navigation"], mat-sidenav, bard-sidenav)
+  :is(
+    [aria-label*="Programado" i],
+    [aria-label*="Scheduled" i],
+    [aria-label*="Personalizar" i],
+    [aria-label*="Customize" i],
+    [mattooltip*="Programado" i],
+    [mattooltip*="Scheduled" i],
+    [mattooltip*="Personalizar" i],
+    [mattooltip*="Customize" i]
+  ) {
+  display: none !important;
+}
+
+/* Keep header controls legible and remove only the duplicate new-chat action. */
+header :is(button, [role="button"]) :is(svg, mat-icon, .material-symbols-outlined, .material-icons, .material-icons-outlined) {
+  color: white !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+header :is(button, [role="button"])[aria-label*="Nuevo chat" i],
+header :is(button, [role="button"])[aria-label*="New chat" i],
+header :is(button, [role="button"])[mattooltip*="Nuevo chat" i],
+header :is(button, [role="button"])[mattooltip*="New chat" i] {
+  display: none !important;
+}
+
+:is(button, [role="button"])[aria-label*="Buscar en los chats" i],
+:is(button, [role="button"])[aria-label*="Search chats" i],
+:is(button, [role="button"])[mattooltip*="Buscar en los chats" i],
+:is(button, [role="button"])[mattooltip*="Search chats" i],
+:is(button, [role="button"])[title*="Buscar en los chats" i],
+:is(button, [role="button"])[title*="Search chats" i] {
   display: none !important;
 }
